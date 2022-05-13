@@ -1,4 +1,4 @@
-package kim.kim.kkcloud;
+package kim.kin.kkcloud;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
