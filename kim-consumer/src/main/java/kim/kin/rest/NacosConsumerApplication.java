@@ -1,5 +1,6 @@
 package kim.kin.rest;
 
+import kim.kin.service.TestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -24,17 +25,24 @@ public class NacosConsumerApplication {
     @RestController
     public class TestController {
 
-        private final RestTemplate restTemplate;
+//        private final RestTemplate restTemplate;
+        private final TestService testService;
 
+//        @Autowired
+//        public TestController(RestTemplate restTemplate, TestService testService) {
+//            this.restTemplate = restTemplate;
+//            this.testService = testService;
+//        }
         @Autowired
-        public TestController(RestTemplate restTemplate) {
-            this.restTemplate = restTemplate;
+        public TestController( TestService testService) {
+            this.testService = testService;
         }
 
         @RequestMapping(value = "/echo/{str}", method = RequestMethod.GET)
         public String echo(@PathVariable String str) {
 //            return restTemplate.getForObject("http://service-provider/echo/" + str, String.class);
-            return restTemplate.getForObject("http://example/nacos/" + str, String.class);
+//            return restTemplate.getForObject("http://example/nacos/" + str, String.class);
+            return testService.getPayment(Integer.valueOf(str));
         }
     }
 }
