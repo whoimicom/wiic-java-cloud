@@ -1,0 +1,11 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: example
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 172.16.2.160:8848
+  main:
+    web-application-type: reactive
