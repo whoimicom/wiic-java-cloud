@@ -11,3 +11,10 @@ spring:
         server-addr: 172.16.2.160:8848
   main:
     web-application-type: reactive
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: basic

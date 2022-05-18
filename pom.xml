@@ -110,4 +110,14 @@
             </plugins>
         </pluginManagement>
     </build>
+    <distributionManagement>
+        <repository>
+            <id>rdc-releases</id>
+            <url>https://repo.rdc.aliyun.com/repository/128380-release-tlYWM4/</url>
+        </repository>
+        <snapshotRepository>
+            <id>rdc-snapshots</id>
+            <url>https://repo.rdc.aliyun.com/repository/128380-snapshot-L8G303/</url>
+        </snapshotRepository>
+    </distributionManagement>
 </project>
