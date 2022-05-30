@@ -1,5 +1,7 @@
 server:
   port: 8082
+  servlet:
+    context-path: /example
 spring:
   application:
     name: example
@@ -7,5 +9,16 @@ spring:
     nacos:
       discovery:
         server-addr: 172.16.2.160:8848
+        metadata:
+          context-path: ${server.servlet.context-path}
+    gateway:
+      routes:
+        - id: self
+          uri: http://localhost:${server.port}
+          predicates:
+            - Path= ${server.servlet.context-path}/**
+          filters:
+            - StripPrefix=1
+          order: -11000
   main:
     web-application-type: reactive
