@@ -4,27 +4,13 @@ import kim.kin.service.SendSmsReq;
 import kim.kin.service.SmsService;
 import kim.kin.service.TestService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-
-@SpringBootApplication
-@EnableDiscoveryClient
-public class NacosConsumerApplication {
-
-
-
-    public static void main(String[] args) {
-        SpringApplication.run(NacosConsumerApplication.class, args);
-    }
-
-    @RestController
+@RestController
     public class TestController {
 
 //        private final RestTemplate restTemplate;
@@ -44,13 +30,14 @@ public class NacosConsumerApplication {
 
         @RequestMapping(value = "/echo/{str}", method = RequestMethod.GET)
         public String echo(@PathVariable String str) {
+            System.out.println(str);
 //            return restTemplate.getForObject("http://service-provider/echo/" + str, String.class);
 //            return restTemplate.getForObject("http://example/nacos/" + str, String.class);
             return testService.getPayment(Integer.valueOf(str));
         }
 
         @RequestMapping(value = "/huij-sms", method = RequestMethod.GET)
-        public ResponseEntity sms() {
+        public ResponseEntity<Object> sms() {
             SendSmsReq sendSmsReq = new SendSmsReq();
             sendSmsReq.setSmsSign("惠众惠");
             sendSmsReq.setSmsType("TZ");
@@ -58,10 +45,9 @@ public class NacosConsumerApplication {
             sendSmsReq.setPhones("18580588800");
             sendSmsReq.setSourceChannel("fireway");
             sendSmsReq.setTempId("__");
-            ResponseEntity send = smsService.send(sendSmsReq);
+            ResponseEntity<Object> send = smsService.send(sendSmsReq);
             System.out.println("end");
             System.out.println(send);
             return send;
         }
     }
-}

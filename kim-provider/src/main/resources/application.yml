@@ -1,16 +1,22 @@
 server:
   port: 8082
   servlet:
-    context-path: /example
+    context-path: /${spring.application.name}
 spring:
   application:
-    name: example
+    name: kim-provider
   cloud:
-    nacos:
+    consul:
+      host: localhost
+      port: 8500
       discovery:
-        server-addr: 172.16.2.160:8848
-        metadata:
-          context-path: ${server.servlet.context-path}
+        service-name: ${spring.application.name}
+        health-check-path: ${server.servlet.context-path}/actuator/health
+#    nacos:
+#      discovery:
+#        server-addr: 172.16.2.160:8848
+#        metadata:
+#          context-path: ${server.servlet.context-path}
     gateway:
       routes:
         - id: self

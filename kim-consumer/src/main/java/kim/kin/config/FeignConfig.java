@@ -13,10 +13,10 @@ import java.util.stream.Collectors;
 @Configuration
 public class FeignConfig {
 
-    @Bean
-    Logger.Level feignLoggerLevel() {
-        return Logger.Level.FULL;
-    }
+//    @Bean
+//    Logger.Level feignLoggerLevel() {
+//        return Logger.Level.FULL;
+//    }
 
     @Bean
     @ConditionalOnMissingBean

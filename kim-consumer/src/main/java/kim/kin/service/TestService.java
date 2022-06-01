@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 @Component
-@FeignClient("example")
+@FeignClient("kim-provider")
 public interface TestService {
     @GetMapping(value = "/nacos/{id}")
-    public String getPayment(@PathVariable("id") Integer id) ;
+     String getPayment(@PathVariable("id") Integer id) ;
 
 
 }

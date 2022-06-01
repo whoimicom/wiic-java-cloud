@@ -4,7 +4,7 @@
     <jmxConfigurator/>
     <springProperty scope="context" name="contextName" source="server.servlet.context-path"/>
     <property name="path" value="/data/logs"/>
-    <property name="level" value="debug"/>
+    <property name="level" value="info"/>
     <property name="maxHistory" value="90"/>
     <property name="maxFileSize" value="512MB"/>
     <property name="totalSizeCap" value="10240MB"/>
