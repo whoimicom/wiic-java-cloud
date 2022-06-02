@@ -13,6 +13,7 @@ spring:
         service-name: ${spring.application.name}
         health-check-path: ${server.servlet.context-path}/actuator/health
         instance-id: ${spring.application.name}:${server.port}:${spring.cloud.client.ip-address}
+        acl-token: 93d69210-c821-8f46-87e8-d2bf1d1baf49
 #    nacos:
 #      discovery:
 #        server-addr: 172.16.2.160:8848

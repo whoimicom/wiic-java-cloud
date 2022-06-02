@@ -15,6 +15,7 @@ spring:
         service-name: ${spring.application.name}
         health-check-path: /actuator/health
         instance-id: ${spring.application.name}:${server.port}:${spring.cloud.client.ip-address}
+        acl-token: 93d69210-c821-8f46-87e8-d2bf1d1baf49
     gateway:
       routes:
         - id: self
