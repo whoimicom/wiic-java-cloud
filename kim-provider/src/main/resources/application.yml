@@ -12,7 +12,7 @@ spring:
       discovery:
         service-name: ${spring.application.name}
         health-check-path: ${server.servlet.context-path}/actuator/health
-        instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${server.port}
+        instance-id: ${spring.application.name}:${server.port}:${spring.cloud.client.ip-address}
 #    nacos:
 #      discovery:
 #        server-addr: 172.16.2.160:8848
