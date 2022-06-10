@@ -5,10 +5,7 @@ import kim.kin.service.SmsService;
 import kim.kin.service.TestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
     public class TestController {
@@ -36,7 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
             return testService.getPayment(Integer.valueOf(str));
         }
 
-        @RequestMapping(value = "/huij-sms", method = RequestMethod.GET)
+        @PostMapping(value = "/huij-sms")
         public ResponseEntity<Object> sms() {
             SendSmsReq sendSmsReq = new SendSmsReq();
             sendSmsReq.setSmsSign("惠众惠");

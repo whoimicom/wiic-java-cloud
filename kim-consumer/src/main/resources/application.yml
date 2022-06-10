@@ -1,7 +1,7 @@
 provider:
   server: http://kim-consumer
 server:
-  port: 9091
+  port: 9999
   servlet:
     context-path: /${spring.application.name}
 spring:
@@ -10,12 +10,13 @@ spring:
   cloud:
     consul:
       host: 172.16.2.160
-      port: 8500
+      port: 8900
       discovery:
         service-name: ${spring.application.name}
         health-check-path: /actuator/health
         instance-id: ${spring.application.name}:${server.port}:${spring.cloud.client.ip-address}
-        acl-token: 93d69210-c821-8f46-87e8-d2bf1d1baf49
+        acl-token: 8bc7312a-4a9c-4a59-8db4-2499ee95a974
+        prefer-ip-address: true
     gateway:
       routes:
         - id: self
@@ -25,6 +26,11 @@ spring:
           filters:
             - StripPrefix=1
           order: -11000
+        - id: all
+          uri: http://localhost:${server.port}
+          predicates:
+            - Path= **
+          order: -1000
 #    nacos:
 #      discovery:
 #        server-addr: 172.16.2.160:8848
