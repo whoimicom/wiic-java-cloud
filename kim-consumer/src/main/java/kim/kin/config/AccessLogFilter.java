@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import kim.kin.logs.GatewayLog;
 import org.apache.tomcat.util.buf.StringUtils;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
@@ -35,11 +34,7 @@ import org.springframework.web.server.ServerWebExchange;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-/**
- * 日志过滤器，用于记录日志
- * @author jianzh5
- * @date 2020/3/24 17:17
- */
+
 @Component
 public class AccessLogFilter implements GlobalFilter, Ordered {
 private static final Logger log = LoggerFactory.getLogger(AccessLogFilter.class);
@@ -65,24 +60,24 @@ private static final Logger log = LoggerFactory.getLogger(AccessLogFilter.class)
 
         String ipAddress =request.getRemoteAddress().getAddress().getHostName();
 
-        GatewayLog gatewayLog = new GatewayLog();
-        gatewayLog.setSchema(request.getURI().getScheme());
-        gatewayLog.setRequestMethod(request.getMethodValue());
-        gatewayLog.setRequestPath(requestPath);
-        gatewayLog.setTargetServer(route.getId());
-        gatewayLog.setRequestTime(new Date());
-        gatewayLog.setIp(ipAddress);
+        AccessLog accessLog = new AccessLog();
+        accessLog.setSchema(request.getURI().getScheme());
+        accessLog.setRequestMethod(request.getMethodValue());
+        accessLog.setRequestPath(requestPath);
+        accessLog.setTargetServer(route.getId());
+        accessLog.setRequestTime(new Date());
+        accessLog.setIp(ipAddress);
 
         MediaType mediaType = request.getHeaders().getContentType();
 
         if(MediaType.APPLICATION_FORM_URLENCODED.isCompatibleWith(mediaType) || MediaType.APPLICATION_JSON.isCompatibleWith(mediaType)){
-            return writeBodyLog(exchange, chain, gatewayLog);
+            return writeBodyLog(exchange, chain, accessLog);
         }else{
-            return writeBasicLog(exchange, chain, gatewayLog);
+            return writeBasicLog(exchange, chain, accessLog);
         }
     }
 
-    private Mono<Void> writeBasicLog(ServerWebExchange exchange, GatewayFilterChain chain, GatewayLog accessLog) {
+    private Mono<Void> writeBasicLog(ServerWebExchange exchange, GatewayFilterChain chain, AccessLog accessLog) {
         StringBuilder builder = new StringBuilder();
         MultiValueMap<String, String> queryParams = exchange.getRequest().getQueryParams();
         for (Map.Entry<String, List<String>> entry : queryParams.entrySet()) {
@@ -106,16 +101,16 @@ private static final Logger log = LoggerFactory.getLogger(AccessLogFilter.class)
      * 参考: org.springframework.cloud.gateway.filter.factory.rewrite.ModifyRequestBodyGatewayFilterFactory
      * @param exchange
      * @param chain
-     * @param gatewayLog
+     * @param accessLog
      * @return
      */
     @SuppressWarnings("unchecked")
-    private Mono writeBodyLog(ServerWebExchange exchange, GatewayFilterChain chain, GatewayLog gatewayLog) {
+    private Mono writeBodyLog(ServerWebExchange exchange, GatewayFilterChain chain, AccessLog accessLog) {
         ServerRequest serverRequest = ServerRequest.create(exchange,messageReaders);
 
         Mono<String> modifiedBody = serverRequest.bodyToMono(String.class)
                 .flatMap(body ->{
-                    gatewayLog.setRequestBody(body);
+                    accessLog.setRequestBody(body);
                     return Mono.just(body);
                 });
 
@@ -135,25 +130,20 @@ private static final Logger log = LoggerFactory.getLogger(AccessLogFilter.class)
                     ServerHttpRequest decoratedRequest = requestDecorate(exchange, headers, outputMessage);
 
                     // 记录响应日志
-                    ServerHttpResponseDecorator decoratedResponse = recordResponseLog(exchange, gatewayLog);
+                    ServerHttpResponseDecorator decoratedResponse = recordResponseLog(exchange, accessLog);
 
                     // 记录普通的
                     return chain.filter(exchange.mutate().request(decoratedRequest).response(decoratedResponse).build())
                             .then(Mono.fromRunnable(() -> {
                                 // 打印日志
-                                writeAccessLog(gatewayLog);
+                                writeAccessLog(accessLog);
                             }));
                 }));
     }
 
-    /**
-     * 打印日志
-     * @author javadaily
-     * @date 2021/3/24 14:53
-     * @param gatewayLog 网关日志
-     */
-    private void writeAccessLog(GatewayLog gatewayLog) {
-        log.info(gatewayLog.toString());  
+
+    private void writeAccessLog(AccessLog accessLog) {
+        log.info(accessLog.toString());
     }
 
 
@@ -200,7 +190,7 @@ private static final Logger log = LoggerFactory.getLogger(AccessLogFilter.class)
      * 记录响应日志
      * 通过 DataBufferFactory 解决响应体分段传输问题。
      */
-    private ServerHttpResponseDecorator recordResponseLog(ServerWebExchange exchange, GatewayLog gatewayLog) {
+    private ServerHttpResponseDecorator recordResponseLog(ServerWebExchange exchange, AccessLog accessLog) {
         ServerHttpResponse response = exchange.getResponse();
         DataBufferFactory bufferFactory = response.bufferFactory();
 
@@ -209,11 +199,11 @@ private static final Logger log = LoggerFactory.getLogger(AccessLogFilter.class)
             public Mono<Void> writeWith(Publisher<? extends DataBuffer> body) {
                 if (body instanceof Flux) {
                     Date responseTime = new Date();
-                    gatewayLog.setResponseTime(responseTime);
+                    accessLog.setResponseTime(responseTime);
                     // 计算执行时间
-                    long executeTime = (responseTime.getTime() - gatewayLog.getRequestTime().getTime());
+                    long executeTime = (responseTime.getTime() - accessLog.getRequestTime().getTime());
 
-                    gatewayLog.setExecuteTime(executeTime);
+                    accessLog.setExecuteTime(executeTime);
 
                     // 获取响应类型，如果是 json 就打印
                     String originalResponseContentType = exchange.getAttribute(ServerWebExchangeUtils.ORIGINAL_RESPONSE_CONTENT_TYPE_ATTR);
@@ -236,7 +226,7 @@ private static final Logger log = LoggerFactory.getLogger(AccessLogFilter.class)
 
 
 
-                            gatewayLog.setResponseData(responseResult);
+                            accessLog.setResponseData(responseResult);
 
                             return bufferFactory.wrap(content);
                         }));

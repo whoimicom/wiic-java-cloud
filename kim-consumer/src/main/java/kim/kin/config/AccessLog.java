@@ -1,9 +1,9 @@
-package kim.kin.logs;
+package kim.kin.config;
 
 import java.util.Date;
 
 
-public class GatewayLog {
+public class AccessLog {
     /**访问实例*/
     private String targetServer;
     /**请求路径*/
