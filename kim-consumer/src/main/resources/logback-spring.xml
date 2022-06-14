@@ -2,6 +2,7 @@
 
 <configuration scan="true" scanPeriod="60 seconds" debug="false">
     <jmxConfigurator/>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
     <springProperty scope="context" name="contextName" source="server.servlet.context-path"/>
     <property name="path" value="/data/logs"/>
     <property name="level" value="info"/>
@@ -11,12 +12,28 @@
     <property name="pattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%-5level] %logger{36} - %msg%n"/>
     <property name="otherPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} \t %-5p \t %-10t \t %C \t %4L \t %m%n" />
     <property name="patternColoring" value="%red(%d{yyyy-MM-dd HH:mm:ss}) %green([%thread]) %highlight(%-5level) %boldMagenta(%logger{36}) - %msg%n"/>
+    <property name="CONSOLE_LOG_PATTERN"
+              value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
+
     <contextName>${contextName}</contextName>
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>${patternColoring}</pattern>
+<!--            <pattern>${patternColoring}</pattern>-->
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
         </encoder>
     </appender>
+
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <!-- Minimum logging level to be presented in the console logs-->
+            <level>DEBUG</level>
+        </filter>
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+
     <appender name="ALL" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${path}/${contextName}/all.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
@@ -69,12 +86,46 @@
 <!--    <logger name="org.hibernate.engine.QueryParameters" level="DEBUG"/>-->
 <!--    <logger name="org.hibernate.engine.query.HQLQueryPlan" level="DEBUG"/>-->
     <!-- root级别   DEBUG -->
+
+    <!-- Appender to log to file in a JSON format -->
+    <appender name="logstash" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${path}/${contextName}/%d{yyyyMMdd}.json</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_FILE}.json.%d{yyyy-MM-dd}.gz</fileNamePattern>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <timestamp>
+                    <timeZone>UTC</timeZone>
+                </timestamp>
+                <pattern>
+                    <pattern>
+                        {
+                        "timestamp": "@timestamp",
+                        "severity": "%level",
+                        "service": "${springAppName:-}",
+                        "trace": "%X{traceId:-}",
+                        "span": "%X{spanId:-}",
+                        "pid": "${PID:-}",
+                        "thread": "%thread",
+                        "class": "%logger{40}",
+                        "rest": "%message"
+                        }
+                    </pattern>
+                </pattern>
+            </providers>
+        </encoder>
+    </appender>
+
+
     <root>
         <level value="${level}"/>
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="ERROR"/>
         <appender-ref ref="INFO"/>
         <appender-ref ref="ALL"/>
+        <appender-ref ref="logstash"/>
     </root>
     <appender name="CLASS-APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
@@ -93,6 +144,9 @@
     <logger name="busiclassLog" level="INFO" additivity="true">
         <appender-ref ref="CLASS-APPENDER"/>
     </logger>
+
+
+
 
     <!--    #normal  -->
     <!--    private Logger busiclassLog = LoggerFactory.getLogger("busiclassLog");  -->

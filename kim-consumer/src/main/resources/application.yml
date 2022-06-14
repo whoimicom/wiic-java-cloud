@@ -7,6 +7,17 @@ server:
 spring:
   application:
     name: kim-consumer
+  sleuth:
+    web:
+      skip-pattern: /actuator/health
+    sampler:
+      probability: 1.0
+  zipkin:
+    enabled: true
+    service:
+      name: ${spring.application.name}
+    base-url: http://172.16.2.160:9411
+    discovery-client-enabled: false
   cloud:
     consul:
       host: 172.16.2.160
