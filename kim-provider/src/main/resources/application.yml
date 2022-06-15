@@ -6,6 +6,8 @@ spring:
   application:
     name: kim-provider
   sleuth:
+#    reactor:
+#      instrumentation-type: decorate_on_each
     web:
       skip-pattern: /actuator/health
     sampler:

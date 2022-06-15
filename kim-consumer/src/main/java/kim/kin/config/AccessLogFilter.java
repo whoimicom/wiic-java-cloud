@@ -1,11 +1,11 @@
 package kim.kin.config;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.tomcat.util.buf.StringUtils;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +26,7 @@ import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.http.server.reactive.ServerHttpResponseDecorator;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
+import org.springframework.util.StringUtils;
 import org.springframework.web.reactive.function.BodyInserter;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.server.HandlerStrategies;
@@ -81,7 +82,7 @@ private static final Logger log = LoggerFactory.getLogger(AccessLogFilter.class)
         StringBuilder builder = new StringBuilder();
         MultiValueMap<String, String> queryParams = exchange.getRequest().getQueryParams();
         for (Map.Entry<String, List<String>> entry : queryParams.entrySet()) {
-            builder.append(entry.getKey()).append("=").append(StringUtils.join(entry.getValue(), ','));
+            builder.append(entry.getKey()).append("=").append(StringUtils.collectionToDelimitedString(entry.getValue(), ","));
         }
         accessLog.setRequestBody(builder.toString());
 
@@ -236,5 +237,10 @@ private static final Logger log = LoggerFactory.getLogger(AccessLogFilter.class)
                 return super.writeWith(body);
             }
         };
+    }
+
+    public static void main(String[] args) {
+        String s = StringUtils.collectionToDelimitedString(Arrays.asList("1", "2"), ",");
+        System.out.println(s);
     }
 }
