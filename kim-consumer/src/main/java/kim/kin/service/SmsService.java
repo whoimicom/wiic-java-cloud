@@ -11,7 +11,7 @@ import javax.validation.Valid;
 import java.util.Map;
 
 @Component
-@FeignClient("huij-sms")
+@FeignClient(value = "huij-sms",path = "/huij-sms")
 public interface SmsService {
 
 

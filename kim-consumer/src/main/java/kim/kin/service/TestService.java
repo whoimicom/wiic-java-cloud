@@ -8,8 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @Component
 @FeignClient("kim-provider")
 public interface TestService {
-    @GetMapping(value = "/nacos/{id}")
-     String getPayment(@PathVariable("id") Integer id) ;
-
+    @GetMapping(value = "/kim-provider/pathVariable/{id}")
+    public String pathVariable(@PathVariable("id") Integer id);
 
 }

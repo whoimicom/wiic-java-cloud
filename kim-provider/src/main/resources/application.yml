@@ -5,6 +5,8 @@ server:
 spring:
   application:
     name: kim-provider
+  webflux:
+    base-path: /${spring.application.name}
   sleuth:
 #    reactor:
 #      instrumentation-type: decorate_on_each

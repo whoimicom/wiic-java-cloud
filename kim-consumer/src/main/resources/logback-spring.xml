@@ -4,6 +4,7 @@
     <jmxConfigurator/>
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
     <springProperty scope="context" name="contextName" source="server.servlet.context-path"/>
+    <springProperty scope="context" name="springAppName" source="spring.application.name"/>
     <property name="path" value="/data/logs"/>
     <property name="level" value="info"/>
     <property name="maxHistory" value="90"/>
