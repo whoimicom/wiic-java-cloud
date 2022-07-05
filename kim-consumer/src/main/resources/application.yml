@@ -13,7 +13,7 @@ spring:
 #    reactor:
 #      instrumentation-type: decorate_on_each
     web:
-      skip-pattern: /actuator/health
+      skip-pattern: /${spring.application.name}/actuator/health
     sampler:
       probability: 1.0
   zipkin:
@@ -28,7 +28,7 @@ spring:
       port: 8900
       discovery:
         service-name: ${spring.application.name}
-        health-check-path: /actuator/health
+        health-check-path: /${spring.application.name}/actuator/health
         instance-id: ${spring.application.name}:${server.port}:${spring.cloud.client.ip-address}
         acl-token: 8bc7312a-4a9c-4a59-8db4-2499ee95a974
         prefer-ip-address: true

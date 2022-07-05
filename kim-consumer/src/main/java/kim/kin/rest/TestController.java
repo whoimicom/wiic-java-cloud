@@ -6,6 +6,7 @@ import kim.kin.service.TestService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,5 +43,39 @@ public class TestController {
         ResponseEntity<Object> send = smsService.send(req);
         log.info(send.toString());
         return send;
+    }
+
+    @PostMapping(value = "/testform", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+    public ResponseEntity<Object> testform(FormValue formvalue) {
+        log.info(formvalue.toString());
+        return ResponseEntity.ok(formvalue);
+    }
+
+     record TestRecord(String formvalue){};
+
+
+    @PostMapping(value = "/formRecord", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+    public ResponseEntity<Object> formRecord(TestRecord formvalue) {
+        log.info(formvalue.toString());
+        return ResponseEntity.ok(formvalue);
+    }
+
+    class FormValue {
+        private String theValue;
+
+        public String getTheValue() {
+            return theValue;
+        }
+
+        public void setTheValue(String theValue) {
+            this.theValue = theValue;
+        }
+
+        @Override
+        public String toString() {
+            return "FormValue{" +
+                    "theValue='" + theValue + '\'' +
+                    '}';
+        }
     }
 }
