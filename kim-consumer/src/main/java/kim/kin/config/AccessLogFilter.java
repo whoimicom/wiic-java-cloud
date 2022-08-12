@@ -44,7 +44,7 @@ private static final Logger log = LoggerFactory.getLogger(AccessLogFilter.class)
 
     @Override
     public int getOrder() {
-        return -100;
+        return HIGHEST_PRECEDENCE;
     }
 
     @Override

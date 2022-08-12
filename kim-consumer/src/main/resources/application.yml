@@ -7,11 +7,13 @@ server:
 spring:
   application:
     name: kim-consumer
-  webflux:
-    base-path: /${spring.application.name}
+#  webflux:
+#    base-path: /${spring.application.name}
+  main:
+    web-application-type: reactive
   sleuth:
-#    reactor:
-#      instrumentation-type: decorate_on_each
+    reactor:
+      instrumentation-type: decorate_on_each
     web:
       skip-pattern: /${spring.application.name}/actuator/health
     sampler:
@@ -32,34 +34,41 @@ spring:
         instance-id: ${spring.application.name}:${server.port}:${spring.cloud.client.ip-address}
         acl-token: 8bc7312a-4a9c-4a59-8db4-2499ee95a974
         prefer-ip-address: true
-#    gateway:
-#      routes:
-#        - id: self
-#          uri: http://localhost:${server.port}
-#          predicates:
-#            - Path= ${server.servlet.context-path}/**
-#          filters:
-#            - StripPrefix=1
+    gateway:
+      discovery:
+        locator:
+          enabled: false
+      routes:
+        - id: self
+          uri: http://localhost:9999
+          predicates:
+            - Path=/**
+          filters:
+            - StripPrefix=1
+#            ## FIX The 'Access-Control-Allow-Origin' header contains multiple values
+#            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
 #          order: -11000
-#        - id: all
-#          uri: http://localhost:${server.port}
-#          predicates:
-#            - Path= **
-#          order: -1000
 #    nacos:
 #      discovery:
 #        server-addr: 172.16.2.160:8848
 #      metadata:
 #        context-path: ${server.servlet.context-path}
-
-  main:
-    web-application-type: reactive
+management:
+  endpoint:
+    health:
+      show-details: always
+    shutdown:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: '*'
 feign:
   client:
     config:
       default:
         connectTimeout: 5000
-        readTimeout: 5000
+        readTimeout: 30000
         loggerLevel: basic
 #logging:
 #  level:

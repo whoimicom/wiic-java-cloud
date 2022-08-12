@@ -33,7 +33,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 
-@Component
+//@Component
 public class GatewayContextFilter
     implements GlobalFilter , Ordered {
 
@@ -76,7 +76,7 @@ public class GatewayContextFilter
         if (request.getMethod() == HttpMethod.POST) {
             Mono<Void> voidMono = null;
             if (MediaType.APPLICATION_JSON.equals(contentType)
-                || MediaType.APPLICATION_JSON_UTF8.equals(contentType)) {
+                || MediaType.APPLICATION_JSON_VALUE.equals(contentType)) {
                 voidMono =
                     readBody(exchange, chain, gatewayContext);
             }

@@ -1,5 +1,5 @@
 server:
-  port: 8082
+  port: 9092
   servlet:
     context-path: /${spring.application.name}
 spring:
@@ -47,3 +47,4 @@ spring:
 #          order: -11000
   main:
     web-application-type: reactive
+    allow-bean-definition-overriding: true
