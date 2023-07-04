@@ -5,7 +5,7 @@
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
     <springProperty scope="context" name="contextName" source="server.servlet.context-path"/>
     <springProperty scope="context" name="springAppName" source="spring.application.name"/>
-    <property name="path" value="${user.home}/${springAppName}/logs"/>
+    <property name="logDir" value="${user.home}/logs/${springAppName}"/>
     <property name="level" value="info"/>
     <property name="maxHistory" value="90"/>
     <property name="maxFileSize" value="512MB"/>
@@ -37,9 +37,9 @@
     </appender>
 
     <appender name="ALL" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${path}/${contextName}/all.log</file>
+        <file>${logDir}/${contextName}/all.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${path}/${contextName}/%d{yyyyMMdd}.all.%i.log</fileNamePattern>
+            <fileNamePattern>${logDir}/${contextName}/%d{yyyyMMdd}.all.%i.log</fileNamePattern>
             <maxFileSize>${maxFileSize}</maxFileSize>
             <maxHistory>${maxHistory}</maxHistory>
             <totalSizeCap>${totalSizeCap}</totalSizeCap>
@@ -50,14 +50,14 @@
         </encoder>
     </appender>
     <appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${path}/${contextName}/error.log</file>
+        <file>${logDir}/${contextName}/error.log</file>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>ERROR</level>
             <onMatch>ACCEPT</onMatch>
             <onMismatch>DENY</onMismatch>
         </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${path}/${contextName}/%d{yyyyMMdd}.error.%i.log</fileNamePattern>
+            <fileNamePattern>${logDir}/${contextName}/%d{yyyyMMdd}.error.%i.log</fileNamePattern>
             <maxFileSize>${maxFileSize}</maxFileSize>
             <maxHistory>${maxHistory}</maxHistory>
             <totalSizeCap>${totalSizeCap}</totalSizeCap>
@@ -67,14 +67,14 @@
         </encoder>
     </appender>
     <appender name="INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${path}/${contextName}/info.log</file>
+        <file>${logDir}/${contextName}/info.log</file>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>INFO</level>
             <onMatch>ACCEPT</onMatch>
             <onMismatch>DENY</onMismatch>
         </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${path}/${contextName}/%d{yyyyMMdd}.info.%i.log</fileNamePattern>
+            <fileNamePattern>${logDir}/${contextName}/%d{yyyyMMdd}.info.%i.log</fileNamePattern>
             <maxFileSize>${maxFileSize}</maxFileSize>
             <maxHistory>${maxHistory}</maxHistory>
             <totalSizeCap>${totalSizeCap}</totalSizeCap>
@@ -92,9 +92,9 @@
 
     <!-- Appender to log to file in a JSON format -->
     <appender name="logstash" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${path}/${contextName}/logstash.json</file>
+        <file>${logDir}/${contextName}/logstash.json</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${path}/${contextName}/logstash.json.%d{yyyy-MM-dd}.gz</fileNamePattern>
+            <fileNamePattern>${logDir}/${contextName}/logstash.json.%d{yyyy-MM-dd}.gz</fileNamePattern>
             <maxHistory>7</maxHistory>
         </rollingPolicy>
         <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
@@ -138,7 +138,7 @@
             <pattern>${pattern}</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${path}/${contextName}/%d{yyyyMMdd}.class.%i.log</fileNamePattern>
+            <fileNamePattern>${logDir}/${contextName}/%d{yyyyMMdd}.class.%i.log</fileNamePattern>
             <maxFileSize>${maxFileSize}</maxFileSize>
             <maxHistory>${maxHistory}</maxHistory>
             <totalSizeCap>${totalSizeCap}</totalSizeCap>

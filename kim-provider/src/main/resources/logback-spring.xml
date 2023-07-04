@@ -2,7 +2,7 @@
 <configuration>
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
     <springProperty scope="context" name="springAppName" source="spring.application.name"/>
-    <property name="path" value="${user.dir}/${springAppName}/logs"/>
+    <property name="path" value="${user.dir}/logs//${springAppName}"/>
     <!-- Example for logging into the build folder of your project -->
     <property name="LOG_FILE" value="${BUILD_FOLDER:-build}/${springAppName}"/>
 
