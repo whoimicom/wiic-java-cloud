@@ -1,5 +1,6 @@
 package kim.kin.rest;
 
+import jakarta.validation.Valid;
 import kim.kin.service.SendSmsReq;
 import kim.kin.service.SmsService;
 import org.slf4j.Logger;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 
 @RestController
 public class TestRest {
