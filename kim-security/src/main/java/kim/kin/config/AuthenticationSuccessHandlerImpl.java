@@ -1,7 +1,9 @@
 package kim.kin.config;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.Resource;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferFactory;
 import org.springframework.http.HttpHeaders;
@@ -18,13 +20,11 @@ import java.nio.charset.StandardCharsets;
 @Component
 public class AuthenticationSuccessHandlerImpl implements ServerAuthenticationSuccessHandler {
 
-
+    @Resource
     private JwtTokenUtil jwtTokenUtil;
+    @Resource
+    private ObjectMapper objectMapper;
 
-    @Autowired
-    public void setJwtTokenUtil(JwtTokenUtil jwtTokenUtil) {
-        this.jwtTokenUtil = jwtTokenUtil;
-    }
 
     @Override
     public Mono<Void> onAuthenticationSuccess(WebFilterExchange webFilterExchange, Authentication authentication) {
@@ -32,12 +32,18 @@ public class AuthenticationSuccessHandlerImpl implements ServerAuthenticationSuc
                 .just(webFilterExchange.getExchange().getResponse())
                 .flatMap(response -> {
                     DataBufferFactory dataBufferFactory = response.bufferFactory();
-                    // 生成JWT token
                     UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-//                    Object principal = authentication.getPrincipal();
                     String username = userDetails.getUsername();
-                    String tokenStr = jwtTokenUtil.generateToken(username, username, userDetails.getAuthorities());
-                    DataBuffer dataBuffer = dataBufferFactory.wrap(tokenStr.getBytes());
+
+                    String bearer = jwtTokenUtil.generateToken(username, username, userDetails.getAuthorities());
+                    userDetails.eraseCredentials();
+                    userDetails.setBearer(bearer);
+                    DataBuffer dataBuffer;
+                    try {
+                        dataBuffer = dataBufferFactory.wrap(objectMapper.writeValueAsBytes(userDetails));
+                    } catch (JsonProcessingException e) {
+                        return Mono.error(new RuntimeException(e));
+                    }
                     response.getHeaders().set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
                     response.getHeaders().set(HttpHeaders.ACCEPT_CHARSET, StandardCharsets.UTF_8.toString());
                     response.setStatusCode(HttpStatus.OK);

@@ -1,9 +1,9 @@
 package kim.kin.config;
 
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.impl.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.impl.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;

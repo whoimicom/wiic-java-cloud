@@ -8,6 +8,7 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.security.web.server.context.ServerSecurityContextRepository;
 import org.springframework.stereotype.Component;
@@ -41,13 +42,13 @@ public class SecurityContextRepositoryImpl implements ServerSecurityContextRepos
 
         HttpHeaders httpHeaders = exchange.getRequest().getHeaders();
         String authorization = httpHeaders.getFirst(HttpHeaders.AUTHORIZATION);
-        if (authorization == null || authorization.isBlank()) {
+        if (authorization == null || authorization.isEmpty()) {
             return Mono.empty();
         }
 
         String token = authorization.substring(JwtTokenUtil.AUTH_BEARER.length());
 
-        if (token == null || token.isBlank()) {
+        if (token.isEmpty()) {
             return Mono.empty();
         }
 
