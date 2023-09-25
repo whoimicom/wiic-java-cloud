@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>kim.kin</groupId>
-        <artifactId>kk-cloud</artifactId>
+        <artifactId>kim-cloud</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
