@@ -92,13 +92,13 @@ public class WebfluxSecurityConfig {
                 .authorizeExchange(exchanges -> {
 //                            exchanges.anyExchange().authenticated();
 //                             exchange.pathMatchers(pattern).permitAll()
-                            // 拦截认证
-                            exchanges.pathMatchers(HttpMethod.OPTIONS).permitAll()
-                                    .pathMatchers(anonymousUrls.toArray(new String[0])).permitAll()
-                                    .anyExchange().access(authorizationManager);
-
-                        }
-                )
+                                // 拦截认证
+                                if (!anonymousUrls.isEmpty()) {
+                                    exchanges.pathMatchers(anonymousUrls.toArray(new String[0])).permitAll();
+                                }
+                                exchanges.pathMatchers(HttpMethod.OPTIONS).permitAll().anyExchange().access(authorizationManager);
+                            }
+                    )
                 .exceptionHandling(exceptionHandlingSpec -> exceptionHandlingSpec.accessDeniedHandler(accessDeniedHandler))
 //                .exceptionHandling().accessDeniedHandler(accessDeniedHandler).and()
                 .addFilterAt(authenticationWebFilter(), SecurityWebFiltersOrder.AUTHENTICATION)
