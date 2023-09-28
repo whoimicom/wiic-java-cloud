@@ -1,8 +1,6 @@
 package kim.kin.config;
 
 import jakarta.annotation.Resource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
@@ -19,9 +17,8 @@ import reactor.core.publisher.Mono;
 @Component
 @Primary
 public class AuthenticationManagerImpl implements ReactiveAuthenticationManager {
-    private static final Logger log = LoggerFactory.getLogger(AuthenticationManagerImpl.class);
-//    @Resource
-    private final PasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
+    //    @Resource
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Resource
     private UserDetailsServiceImpl userDetailsService;
@@ -38,23 +35,16 @@ public class AuthenticationManagerImpl implements ReactiveAuthenticationManager 
 
         // if authentication is successful an Authentication is returned
         if (authentication.isAuthenticated()) {
-//            SecurityContextHolder.getContext().setAuthentication(authentication);
             return Mono.just(authentication);
         }
-
-        // 转换为自定义security令牌
-//        UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) authentication;
-//        log.debug("{}", token);
-//        String name = token.getName();
         UserDetails userDetails = userDetailsService.loadUserByUsername(authentication.getName());
         String password = userDetails.getPassword();
         if (!passwordEncoder.matches(authentication.getCredentials().toString(), password)) {
             throw new BadCredentialsException("用户不存在或者密码错误");
         }
-//        token.setAuthenticated(true);
-//        token.setDetails(userDetails.getAuthorities());
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails,password,userDetails.getAuthorities());
-        usernamePasswordAuthenticationToken.setDetails(userDetails.getAuthorities());
+
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, password, userDetails.getAuthorities());
+        usernamePasswordAuthenticationToken.setDetails(authentication.getDetails());
         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
         return Mono.just(usernamePasswordAuthenticationToken);
     }
