@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 
 @Component
-@FeignClient(value = "huij-sms",path = "/huij-sms")
+//@FeignClient(value = "huij-sms",path = "/huij-sms")
 public interface SmsService {
 
     @PostMapping(value = "/dahan/send")

@@ -16,34 +16,34 @@ import org.springframework.web.bind.annotation.*;
 public class TestController {
     private static final Logger log = LoggerFactory.getLogger(TestController.class);
     //        private final RestTemplate restTemplate;
-    private final TestService testService;
-    private final SmsService smsService;
+//    private final TestService testService;
+//    private final SmsService smsService;
 
     //        @Autowired
 //        public TestController(RestTemplate restTemplate, TestService testService) {
 //            this.restTemplate = restTemplate;
 //            this.testService = testService;
 //        }
-    @Autowired
-    public TestController(TestService testService, SmsService smsService) {
-        this.testService = testService;
-        this.smsService = smsService;
-    }
+//    @Autowired
+//    public TestController(TestService testService, SmsService smsService) {
+//        this.testService = testService;
+//        this.smsService = smsService;
+//    }
 
-    @RequestMapping(value = "/echo/{str}", method = RequestMethod.GET)
-    public String echo(@PathVariable String str) {
-        log.info(str);
-//            return restTemplate.getForObject("http://service-provider/echo/" + str, String.class);
-//            return restTemplate.getForObject("http://example/nacos/" + str, String.class);
-        return testService.pathVariable(Integer.valueOf(str));
-    }
+//    @RequestMapping(value = "/echo/{str}", method = RequestMethod.GET)
+//    public String echo(@PathVariable String str) {
+//        log.info(str);
+////            return restTemplate.getForObject("http://service-provider/echo/" + str, String.class);
+////            return restTemplate.getForObject("http://example/nacos/" + str, String.class);
+//        return testService.pathVariable(Integer.valueOf(str));
+//    }
 
-    @PostMapping(value = "/huij-sms")
-    public ResponseEntity<Object> sms(@Valid @RequestBody SendSmsReq req) {
-        ResponseEntity<Object> send = smsService.send(req);
-        log.info(send.toString());
-        return send;
-    }
+//    @PostMapping(value = "/huij-sms")
+//    public ResponseEntity<Object> sms(@Valid @RequestBody SendSmsReq req) {
+//        ResponseEntity<Object> send = smsService.send(req);
+//        log.info(send.toString());
+//        return send;
+//    }
 
     @PostMapping(value = "/testform", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
     public ResponseEntity<Object> testform(FormValue formvalue) {

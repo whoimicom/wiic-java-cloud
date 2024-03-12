@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 @Component
-@FeignClient("kim-provider")
+//@FeignClient("kim-provider")
 public interface TestService {
     @GetMapping(value = "/kim-provider/pathVariable/{id}")
     public String pathVariable(@PathVariable("id") Integer id);

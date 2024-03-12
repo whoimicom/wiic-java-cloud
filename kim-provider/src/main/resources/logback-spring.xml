@@ -2,7 +2,7 @@
 <configuration>
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
     <springProperty scope="context" name="springAppName" source="spring.application.name"/>
-    <property name="path" value="${user.dir}/logs//${springAppName}"/>
+    <property name="path" value="${user.dir}/logs/${springAppName}"/>
     <!-- Example for logging into the build folder of your project -->
     <property name="LOG_FILE" value="${BUILD_FOLDER:-build}/${springAppName}"/>
 
@@ -70,4 +70,30 @@
         <!--<appender-ref ref="logstash"/>-->
         <!--<appender-ref ref="flatfile"/>-->
     </root>
+<!--    <appender name="accessLog" class="ch.qos.logback.core.FileAppender">
+        <file>${user.home}/logs/${springAppName}/access_log.log</file>
+        <encoder>
+            <pattern>%msg%n</pattern>
+        </encoder>
+    </appender>-->
+
+    <appender name="accessLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${user.home}/logs/${springAppName}/access_log.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>%d{yyyy-MM-dd}.access_log.log</fileNamePattern>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%msg%n</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="async" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="accessLog" />
+    </appender>
+
+    <logger name="reactor.netty.http.server.AccessLog" level="INFO" additivity="false">
+        <appender-ref ref="async"/>
+    </logger>
 </configuration>

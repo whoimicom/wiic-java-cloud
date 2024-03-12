@@ -25,15 +25,15 @@ spring:
     base-url: http://172.16.2.160:9411
     discovery-client-enabled: false
   cloud:
-    consul:
-      host: 172.16.2.160
-      port: 8900
-      discovery:
-        service-name: ${spring.application.name}
-        health-check-path: /${spring.application.name}/actuator/health
-        instance-id: ${spring.application.name}:${server.port}:${spring.cloud.client.ip-address}
-        acl-token: 8bc7312a-4a9c-4a59-8db4-2499ee95a974
-        prefer-ip-address: true
+#    consul:
+#      host: 172.16.2.160
+#      port: 8900
+#      discovery:
+#        service-name: ${spring.application.name}
+#        health-check-path: /${spring.application.name}/actuator/health
+#        instance-id: ${spring.application.name}:${server.port}:${spring.cloud.client.ip-address}
+#        acl-token: 8bc7312a-4a9c-4a59-8db4-2499ee95a974
+#        prefer-ip-address: true
     gateway:
       discovery:
         locator:

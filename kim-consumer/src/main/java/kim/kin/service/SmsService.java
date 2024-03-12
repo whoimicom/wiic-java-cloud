@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @Component
-@FeignClient(value = "huij-sms",path = "/huij-sms")
+//@FeignClient(value = "huij-sms",path = "/huij-sms")
 public interface SmsService {
 
 
