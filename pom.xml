@@ -2,16 +2,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>kim.kin</groupId>
-    <artifactId>kim-cloud</artifactId>
+    <groupId>whoimi.com</groupId>
+    <artifactId>wiic-java-cloud</artifactId>
     <packaging>pom</packaging>
     <version>0.0.1-SNAPSHOT</version>
     <modules>
-        <module>kim-consumer</module>
-        <module>kim-provider</module>
-        <module>kim-security</module>
+        <module>wiic-consumer</module>
+        <module>wiic-provider</module>
+        <module>wiic-security</module>
     </modules>
-    <name>kk-cloud</name>
+    <name>wiic-java-cloud</name>
     <description>Demo project for Spring Boot</description>
     <properties>
         <java.version>17</java.version>
@@ -20,8 +20,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
-        <spring-cloud.version>2023.0.0</spring-cloud.version>
-        <spring-boot.version>3.2.3</spring-boot.version>
+        <spring-cloud.version>2023.0.3</spring-cloud.version>
+        <spring-boot.version>3.3.6</spring-boot.version>
     </properties>
     <dependencies>
         <!--
